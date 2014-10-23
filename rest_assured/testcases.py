@@ -137,7 +137,7 @@ class CreateAPITestCaseMixin(object):
 
         return getattr(self, 'create_data')
 
-    def testing_create(self, data=None, **kwargs):
+    def test_create(self, data=None, **kwargs):
         """Send request to the create view endpoint, verify and return the response.
 
         Also verifies that the object actually exists in the database.
@@ -176,7 +176,7 @@ class DestroyAPITestCaseMixin(object):
 
     """Adds a destroy view test to the test case."""
 
-    def testing_destroy(self, **kwargs):
+    def test_destroy(self, **kwargs):
         """Send request to the destroy view endpoint, verify and return the response.
 
         Also verifies the object does not exist anymore in the database.
@@ -211,6 +211,7 @@ class UpdateAPITestCaseMixin(object):
     """Adds an update view test to the test case."""
 
     use_patch = True
+    update_data = None
 
     def get_update_data(self):
         """Return the data used for the update request.
@@ -233,7 +234,7 @@ class UpdateAPITestCaseMixin(object):
 
         return getattr(self, 'update_results', self.get_update_data())
 
-    def testing_update(self, data=None, results=None, use_patch=None, **kwargs):
+    def test_update(self, data=None, results=None, use_patch=None, **kwargs):
         """Send request to the update view endpoint, verify and return the response.
 
         :param data: Data dictionary for the update request.
