@@ -125,7 +125,7 @@ class DetailAPITestCaseMixin(object):
 
     def _check_attributes(self, data):
         for attr in self.attributes_to_check:
-            if isinstance(attr, callable):
+            if hasattr(attr, '__call__'):
                 value = attr(self.object)
             else:
                 value = unicode(getattr(self.object, attr))
