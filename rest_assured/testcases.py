@@ -99,6 +99,8 @@ class DetailAPITestCaseMixin(object):
 
     """Adds a detail view test to the test case."""
 
+    attributes_to_check = ['id']
+
     def test_detail(self, **kwargs):
         """Send request to the detail view endpoint, verify and return the response.
 
@@ -117,9 +119,18 @@ class DetailAPITestCaseMixin(object):
             print '\n%s' % response.data
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(unicode(self.object.id), response.data['id'])
+        self._check_attributes(response.data)
 
         return response
+
+    def _check_attributes(self, data):
+        for attr in self.attributes_to_check:
+            if isinstance(attr, callable):
+                value = attr(self.object)
+            else:
+                value = unicode(getattr(self.object, attr))
+
+            self.assertEqual(value, data[attr])
 
 
 class CreateAPITestCaseMixin(object):
