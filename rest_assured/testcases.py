@@ -73,9 +73,9 @@ class BaseRESTAPITestCase(APITestCase):
 
 class ListAPITestCaseMixin(object):
 
-    """Adds the ``listview()`` method for testing list API endpoints."""
+    """Adds a list view test to the test case."""
 
-    def listview(self, **kwargs):
+    def test_list(self, **kwargs):
         """Send request to the list view endpoint, verify and return the response.
 
         Checks for a 200 status code and that there is a ``results`` property in the ``response.data``.
@@ -97,9 +97,9 @@ class ListAPITestCaseMixin(object):
 
 class DetailAPITestCaseMixin(object):
 
-    """Adds the ``detailview()`` method for testing detail API endpoints."""
+    """Adds a detail view test to the test case."""
 
-    def detailview(self, **kwargs):
+    def test_detail(self, **kwargs):
         """Send request to the detail view endpoint, verify and return the response.
 
         Checks for a 200 status code and that there is an ``id`` property in the ``response.data``
@@ -124,9 +124,20 @@ class DetailAPITestCaseMixin(object):
 
 class CreateAPITestCaseMixin(object):
 
-    """Adds the ``createview()`` method for testing create API endpoints."""
+    """Adds a create view test to the test case."""
 
-    def createview(self, data=None, **kwargs):
+    create_data = None
+
+    def get_create_data(self):
+        """Return the data used for the create request.
+
+        By default gets the ``create_data`` attribute of this class.
+
+        :returns The data dictionary."""
+
+        return getattr(self, 'create_data')
+
+    def testing_create(self, data=None, **kwargs):
         """Send request to the create view endpoint, verify and return the response.
 
         Also verifies that the object actually exists in the database.
@@ -134,6 +145,9 @@ class CreateAPITestCaseMixin(object):
         :param data: A dictionary of the data to use for the create request.
         :param kwargs: Extra arguments that are passed to the client's ``post()`` call.
         :returns The view's response."""
+
+        if data is None:
+            data = self.get_create_data()
 
         create_view = reverse(self._get_create_name())
         response = self.client.post(create_view, data or {}, **kwargs)
@@ -143,6 +157,7 @@ class CreateAPITestCaseMixin(object):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+        # another sanity check:
         # getting the instance from database simply to see that it's found and does not raise any exception
         self.object.__class__.objects.get(id=response.data.get('id'))
 
@@ -159,9 +174,9 @@ class CreateAPITestCaseMixin(object):
 
 class DestroyAPITestCaseMixin(object):
 
-    """Adds the ``destroyview()`` method for testing destroy API endpoints."""
+    """Adds a destroy view test to the test case."""
 
-    def destroyview(self, **kwargs):
+    def testing_destroy(self, **kwargs):
         """Send request to the destroy view endpoint, verify and return the response.
 
         Also verifies the object does not exist anymore in the database.
@@ -176,6 +191,8 @@ class DestroyAPITestCaseMixin(object):
         response = self.client.delete(destroyview, **kwargs)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        # Another sanity check:
+        # see that the instance is removed from the database.
         self.assertRaises(ObjectDoesNotExist, self.object.__class__.objects.get, **{self.lookup_field: object_id})
 
         return response
@@ -191,9 +208,32 @@ class DestroyAPITestCaseMixin(object):
 
 class UpdateAPITestCaseMixin(object):
 
-    """Adds the ``updateview()`` method for testing update API endpoints."""
+    """Adds an update view test to the test case."""
 
-    def updateview(self, data=None, results=None, patch=True, **kwargs):
+    use_patch = True
+
+    def get_update_data(self):
+        """Return the data used for the update request.
+
+        By default gets the ``update_data`` attribute of this class.
+
+        :returns Data dictionary for the update request.
+        """
+
+        return getattr(self, 'update_data')
+
+    def get_update_results(self):
+        """Return a dictionary of the expected results of the instance.
+
+        By default gets the ``update_results`` attribute of this class.
+        If that isn't set defaults to the data.
+
+        :returns Dictionary mapping instance properties to expected values.
+        """
+
+        return getattr(self, 'update_results', self.get_update_data())
+
+    def testing_update(self, data=None, results=None, use_patch=None, **kwargs):
         """Send request to the update view endpoint, verify and return the response.
 
         :param data: Data dictionary for the update request.
@@ -202,10 +242,19 @@ class UpdateAPITestCaseMixin(object):
         :returns The view's response."""
 
         object_id = getattr(self.object, self.lookup_field)
-        updateview = reverse(self._get_update_name(),
-                             args=(object_id,))
-        args = [updateview, data]
-        response = self.client.patch(*args, **kwargs) if patch else self.client.put(*args, **kwargs)
+        update_view = reverse(self._get_update_name(),
+                              args=(object_id,))
+        if data is None:
+            data = self.get_update_data()
+
+        if results is None:
+            results = self.get_update_results()
+
+        args = [update_view, data]
+        if use_patch is None:
+            use_patch = self.use_patch
+
+        response = self.client.patch(*args) if use_patch else self.client.put(*args)
 
         if response.status_code == status.HTTP_400_BAD_REQUEST:
             print '\n%s' % response.data
@@ -214,6 +263,8 @@ class UpdateAPITestCaseMixin(object):
 
         # getting a fresh copy of the object from DB
         obj = self.object.__class__.objects.get(**{self.lookup_field: object_id})
+        # Sanity check:
+        # check that the copy in the database was updated as expected.
         self._update_check_db(obj, data, results)
 
         return response
@@ -251,21 +302,21 @@ class UpdateAPITestCaseMixin(object):
             self.assertEqual(attribute, results.get(key, value))
 
 
-class ReadAPITestCaseMixin(ListAPITestCaseMixin, DetailAPITestCaseMixin):
+class ReadRESTAPITestCaseMixin(ListAPITestCaseMixin, DetailAPITestCaseMixin):
 
     """Adds the read CRUD operations tests to the test case."""
 
     pass
 
 
-class WriteAPITestCaseMixin(CreateAPITestCaseMixin, UpdateAPITestCaseMixin, DestroyAPITestCaseMixin):
+class WriteRESTAPITestCaseMixin(CreateAPITestCaseMixin, UpdateAPITestCaseMixin, DestroyAPITestCaseMixin):
 
     """Adds the write CRUD operations tests to the test case."""
 
     pass
 
 
-class RESTAPITestCase(ReadAPITestCaseMixin, WriteAPITestCaseMixin, BaseRESTAPITestCase):
+class ReadWriteRESTAPITestCase(ReadRESTAPITestCaseMixin, WriteRESTAPITestCaseMixin):
 
     """A complete API test case that covers all successful CRUD operation requests."""
 
