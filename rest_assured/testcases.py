@@ -223,6 +223,7 @@ class UpdateAPITestCaseMixin(object):
 
     use_patch = True
     update_data = None
+    update_results = None
 
     def get_update_data(self):
         """Return the data used for the update request.
@@ -329,7 +330,7 @@ class WriteRESTAPITestCaseMixin(CreateAPITestCaseMixin, UpdateAPITestCaseMixin, 
     pass
 
 
-class ReadWriteRESTAPITestCase(ReadRESTAPITestCaseMixin, WriteRESTAPITestCaseMixin):
+class ReadWriteRESTAPITestCaseMixin(ReadRESTAPITestCaseMixin, WriteRESTAPITestCaseMixin):
 
     """A complete API test case that covers all successful CRUD operation requests."""
 
