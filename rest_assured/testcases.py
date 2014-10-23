@@ -223,16 +223,17 @@ class UpdateAPITestCaseMixin(object):
 
         return getattr(self, 'update_data')
 
-    def get_update_results(self):
+    def get_update_results(self, data=None):
         """Return a dictionary of the expected results of the instance.
 
         By default gets the ``update_results`` attribute of this class.
         If that isn't set defaults to the data.
 
+        :param data: The update request's data dictionary.
         :returns Dictionary mapping instance properties to expected values.
         """
 
-        return getattr(self, 'update_results', self.get_update_data())
+        return getattr(self, 'update_results', data)
 
     def test_update(self, data=None, results=None, use_patch=None, **kwargs):
         """Send request to the update view endpoint, verify and return the response.
@@ -249,7 +250,7 @@ class UpdateAPITestCaseMixin(object):
             data = self.get_update_data()
 
         if results is None:
-            results = self.get_update_results()
+            results = self.get_update_results(data)
 
         args = [update_view, data]
         if use_patch is None:
