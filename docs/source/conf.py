@@ -244,8 +244,8 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'django-rest-assured', u'django-rest-assured Documentation',
-   u'Yehonatan Daniv', 'django-rest-assured', 'One line description of project.',
-   'Miscellaneous'),
+   u'Yehonatan Daniv', 'django-rest-assured', 'Instantly test-cover your Django REST Framework based API.',
+   'testing'),
 ]
 
 # Documents to append as an appendix to all manuals.
