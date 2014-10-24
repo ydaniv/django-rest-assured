@@ -73,6 +73,7 @@ Contributing
 ------------
 
 Issues are tracked in the `github repository <https://github.com/ydaniv/django-rest-assured/issues/>`_.
+
 Pull requests are welcome!
 
 
