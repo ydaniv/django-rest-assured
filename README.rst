@@ -17,8 +17,8 @@ This gives both a quick coverage of sanity tests to your API and a more DRY and 
 platform for writing additional, more comprehensive tests.
 
 
-As easy as:
------------
+As easy as
+----------
 .. code-block:: python
 
     class CategoryTestCase(ReadWriteRESTAPITestCaseMixin, BaseRESTAPITestCase):
@@ -33,8 +33,8 @@ for mocking objects to test against. However, you can easily extend the ``BaseRE
 to work directly with Django Models or any other factory.
 
 
-Main features:
---------------
+Main features
+-------------
 
 * Class-based declarative API for creating tests.
 * Covers the stack through: ``route > view > serializer > model``.
@@ -43,8 +43,8 @@ Main features:
 * Automatic login via session or token authentication.
 
 
-Requirements:
--------------
+Requirements
+------------
 
 * Django >= 1.6
 * Django REST Framework >= 2.4.3
@@ -52,8 +52,8 @@ Requirements:
 Currently developed only for python 2.7.
 
 
-Download:
----------
+Installation
+------------
 
 PyPI: https://pypi.python.org/pypi/django-rest-assured
 
@@ -69,14 +69,14 @@ Source: https://github.com/ydaniv/django-rest-assured
     $ python setup.py install
 
 
-Contributing:
--------------
+Contributing
+------------
 
 Issues are tracked in the `github repository <https://github.com/ydaniv/django-rest-assured/issues/>`_.
 Pull requests are welcome!
 
 
-License:
---------
+License
+-------
 
 Django-REST-Assured is distributed under the BSD license.
