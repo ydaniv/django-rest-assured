@@ -19,7 +19,7 @@ platform for writing additional, more comprehensive tests.
 
 As easy as:
 -----------
-::
+.. code-block:: python
 
     class CategoryTestCase(ReadWriteRESTAPITestCaseMixin, BaseRESTAPITestCase):
     
@@ -55,15 +55,15 @@ Currently developed only for python 2.7.
 Download:
 ---------
 
-PyPI: `https://pypi.python.org/pypi/django-rest-assured`_
+PyPI: https://pypi.python.org/pypi/django-rest-assured
 
-::
+.. code-block:: sh
 
     $ pip install django-rest-assured
 
-Source: `https://github.com/ydaniv/django-rest-assured`_
+Source: https://github.com/ydaniv/django-rest-assured
 
-::
+.. code-block:: sh
 
     $ git clone https://github.com/ydaniv/django-rest-assured
     $ python setup.py install
@@ -80,19 +80,3 @@ License:
 --------
 
 Django-REST-Assured is distributed under the BSD license.
-
-
-Contents:
-
-.. toctree::
-   :maxdepth: 2
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
