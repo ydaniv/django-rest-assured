@@ -10,11 +10,24 @@ class BaseRESTAPITestCase(APITestCase):
 
     """Base test case class for testing REST API endpoints."""
 
-    LIST_SUFFIX = '-list'
-    DETAIL_SUFFIX = '-detail'
-    lookup_field = 'pk'
+    #: *required*: Base route name of the API endpoints to test.
+    base_name = None
+    #: *required*: The factory class to use for creating the main object to test against.
     factory_class = None
+    #: Suffix for list endpoint view names. Defaults to ``'-list'``.
+    LIST_SUFFIX = '-list'
+    #: Suffix for detail endpoint view names. Defaults to ``'-detail'``.
+    DETAIL_SUFFIX = '-detail'
+    #: The field to use for DB and route lookups. Defaults to ``'pk'``.
+    lookup_field = 'pk'
+    #: User factory to use in case you need to login for auth/permissions testing. Defaults to ``None``.
+    user_factory = None
+    #: Whether to use token authentication instead of session. Defaults to ``False``.
     use_token_auth = False
+    #: The main test subject.
+    object = None
+    #: The user instance created if the ``user_factory`` is set and used. Defaults to ``False``.
+    user = None
 
     def get_factory_class(self):
         """Return the factory class for generating the main object (or model instance) of this test case.
@@ -61,7 +74,7 @@ class BaseRESTAPITestCase(APITestCase):
         self.object = self.get_object(self.get_factory_class())
 
         # create a user and log in to get permissions
-        user_factory = getattr(self, 'user_factory', None)
+        user_factory = getattr(self, 'user_factory')
         if user_factory:
             self.user = user_factory.create()
             if self.use_token_auth:
