@@ -34,7 +34,8 @@ class BaseRESTAPITestCase(APITestCase):
 
         By default this gets the ``factory_class`` attribute of this class.
 
-        :returns Factory class used for creating the mock objects."""
+        :returns: Factory class used for creating the mock objects.
+        """
 
         return getattr(self, 'factory_class')
 
@@ -45,7 +46,8 @@ class BaseRESTAPITestCase(APITestCase):
         a Django Model or a factory_boy's Factory.
 
         :param factory: The factory class used for creating
-        :returns The main object of this test case."""
+        :returns: The main object of this test case.
+        """
 
         return factory.create()
 
@@ -56,7 +58,14 @@ class BaseRESTAPITestCase(APITestCase):
         and the ``raw_password`` attribute of the ``user_factory`` attribute of this class.
 
         :param user: The user instance that will be used to login.
-        :returns A dictionary of credentials for user login."""
+        :returns: A dictionary of credentials for user login.
+
+        Examples:
+            {'username': 'ydaniv'
+             'password': 'bellbottoms'}
+
+        .. note: This method assumes you set the user's password in plain text in ``user_factory.raw_password``.
+        """
 
         return {
             'username': user.get_username(),
@@ -68,7 +77,8 @@ class BaseRESTAPITestCase(APITestCase):
         The user will also be logged in automatically, using the ``login()`` method of the test's client.
         You can opt for token authentication by setting the class' ``use_token_auth`` to ``True``.
 
-        The user instance will be created only if the ``user_factory`` attribute is set to the factory class."""
+        The user instance will be created only if the ``user_factory`` attribute is set to the factory class.
+        """
 
         # create the object
         self.object = self.get_object(self.get_factory_class())
@@ -93,8 +103,22 @@ class ListAPITestCaseMixin(object):
 
         Checks for a 200 status code and that there is a ``results`` property in the ``response.data``.
 
+        You can extend it for more extensive checks.
+
+        .. admonition:: example
+
+            .. code:: python
+
+                class LanguageRESTAPITestCase(ListAPITestCaseMixin, BaseRESTAPITestCase):
+
+                    def test_list(self, **kwargs):
+                        response = super(LanguageRESTAPITestCase, self).test_list(**kwargs)
+                        results = response.data.get('results')
+                        self.assertEqual(results[0].get('code'), self.object.code)
+
         :param kwargs: Extra arguments that are passed to the client's ``get()`` call.
-        :returns The view's response."""
+        :returns: The view's response.
+        """
 
         listview = reverse(self.base_name + self.LIST_SUFFIX)
         response = self.client.get(listview, **kwargs)
@@ -112,6 +136,9 @@ class DetailAPITestCaseMixin(object):
 
     """Adds a detail view test to the test case."""
 
+    #: A list of attribute names to check equality between the main object and the response data.
+    #  Defaults to ``['id']``.
+    #  You can also use a tuple of a string and a callable, that takes the object and returns an attribute's value.
     attributes_to_check = ['id']
 
     def test_detail(self, **kwargs):
@@ -120,8 +147,32 @@ class DetailAPITestCaseMixin(object):
         Checks for a 200 status code and that there is an ``id`` property in the ``response.data``
         and that it equals the main object's id.
 
+        You can extend it for more extensive checks.
+
+        .. admonition:: example
+
+            .. code:: python
+
+                class LanguageRESTAPITestCase(DetailAPITestCaseMixin, BaseRESTAPITestCase):
+
+                    def test_list(self, **kwargs):
+                        response = super(LanguageRESTAPITestCase, self).test_list(**kwargs)
+                        self.assertEqual(response.data.get('code'), self.object.code)
+
+        Using a callable in ``attributes_to_check``:
+
+        .. admonition:: example
+
+            .. code:: python
+
+                class TaggedFoodRESTAPITestCase(DetailAPITestCaseMixin, BaseRESTAPITestCase):
+
+                    attributes_to_check = ['name', ('similar', lambda obj: obj.tags.similar_objects())]
+
+
         :param kwargs: Extra arguments that are passed to the client's ``get()`` call.
-        :returns The view's response."""
+        :returns: The view's response.
+        """
 
         object_id = getattr(self.object, self.lookup_field)
 
@@ -138,8 +189,9 @@ class DetailAPITestCaseMixin(object):
 
     def _check_attributes(self, data):
         for attr in self.attributes_to_check:
-            if hasattr(attr, '__call__'):
-                value = attr(self.object)
+            if isinstance(attr, (tuple, list, set)):
+                value = attr[1](self.object)
+                attr = attr[0]
             else:
                 value = unicode(getattr(self.object, attr))
 
@@ -150,6 +202,7 @@ class CreateAPITestCaseMixin(object):
 
     """Adds a create view test to the test case."""
 
+    #: *required*: Dictionary of data to use as the POST request's body.
     create_data = None
 
     def get_create_data(self):
@@ -157,7 +210,8 @@ class CreateAPITestCaseMixin(object):
 
         By default gets the ``create_data`` attribute of this class.
 
-        :returns The data dictionary."""
+        :returns: The data dictionary.
+        """
 
         return getattr(self, 'create_data')
 
@@ -168,7 +222,8 @@ class CreateAPITestCaseMixin(object):
 
         :param data: A dictionary of the data to use for the create request.
         :param kwargs: Extra arguments that are passed to the client's ``post()`` call.
-        :returns The view's response."""
+        :returns: The view's response.
+        """
 
         if data is None:
             data = self.get_create_data()
@@ -206,7 +261,8 @@ class DestroyAPITestCaseMixin(object):
         Also verifies the object does not exist anymore in the database.
 
         :param kwargs: Extra arguments that are passed to the client's ``delete()`` call.
-        :returns The view's response."""
+        :returns: The view's response.
+        """
 
         object_id = getattr(self.object, self.lookup_field)
 
@@ -234,8 +290,12 @@ class UpdateAPITestCaseMixin(object):
 
     """Adds an update view test to the test case."""
 
+    #: Whether to send a PATCH request instead of PUT. Defaults to ``True``.
     use_patch = True
+    #: *required*: Dictionary of data to use as the update request's body.
     update_data = None
+    #: Dictionary mapping attributes to values to check against the updated instance in the database.
+    #  Defaults to ``update_data``.
     update_results = None
 
     def get_update_data(self):
@@ -243,7 +303,7 @@ class UpdateAPITestCaseMixin(object):
 
         By default gets the ``update_data`` attribute of this class.
 
-        :returns Data dictionary for the update request.
+        :returns: Data dictionary for the update request.
         """
 
         return getattr(self, 'update_data')
@@ -255,7 +315,7 @@ class UpdateAPITestCaseMixin(object):
         If that isn't set defaults to the data.
 
         :param data: The update request's data dictionary.
-        :returns Dictionary mapping instance properties to expected values.
+        :returns: Dictionary mapping instance properties to expected values.
         """
 
         return getattr(self, 'update_results', data)
@@ -266,7 +326,8 @@ class UpdateAPITestCaseMixin(object):
         :param data: Data dictionary for the update request.
         :param results: Dictionary mapping instance properties to expected values.
         :param kwargs: Extra arguments that are passed to the client's ``put()`` or ``patch()`` call.
-        :returns The view's response."""
+        :returns: The view's response.
+        """
 
         object_id = getattr(self.object, self.lookup_field)
         update_view = reverse(self._get_update_name(),
