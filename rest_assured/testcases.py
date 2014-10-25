@@ -60,9 +60,12 @@ class BaseRESTAPITestCase(APITestCase):
         :param user: The user instance that will be used to login.
         :returns: A dictionary of credentials for user login.
 
-        Examples:
-            {'username': 'ydaniv'
-             'password': 'bellbottoms'}
+        .. admonition:: example
+
+            .. code:: python
+
+                {'username': 'ydaniv'
+                 'password': 'bellbottoms'}
 
         .. note: This method assumes you set the user's password in plain text in ``user_factory.raw_password``.
         """
@@ -74,8 +77,8 @@ class BaseRESTAPITestCase(APITestCase):
     def setUp(self):
         """Generates the main object and user instance if needed.
 
-        The user will also be logged in automatically, using the ``login()`` method of the test's client.
-        You can opt for token authentication by setting the class' ``use_token_auth`` to ``True``.
+        | The user will also be logged in automatically, using the ``login()`` method of the test's client.
+        | You can opt for token authentication by setting the class' ``use_token_auth`` to ``True``.
 
         The user instance will be created only if the ``user_factory`` attribute is set to the factory class.
         """
@@ -392,20 +395,29 @@ class UpdateAPITestCaseMixin(object):
 
 class ReadRESTAPITestCaseMixin(ListAPITestCaseMixin, DetailAPITestCaseMixin):
 
-    """Adds the read CRUD operations tests to the test case."""
+    """Adds the read CRUD operations tests to the test case.
+
+    Includes: :class:`ListAPITestCaseMixin`, :class:`DetailAPITestCaseMixin`.
+    """
 
     pass
 
 
 class WriteRESTAPITestCaseMixin(CreateAPITestCaseMixin, UpdateAPITestCaseMixin, DestroyAPITestCaseMixin):
 
-    """Adds the write CRUD operations tests to the test case."""
+    """Adds the write CRUD operations tests to the test case.
+
+    Includes: :class:`CreateAPITestCaseMixin`, :class:`UpdateAPITestCaseMixin`, :class:`DestroyAPITestCaseMixin`.
+    """
 
     pass
 
 
 class ReadWriteRESTAPITestCaseMixin(ReadRESTAPITestCaseMixin, WriteRESTAPITestCaseMixin):
 
-    """A complete API test case that covers all successful CRUD operation requests."""
+    """A complete API test case that covers all successful CRUD operation requests.
+
+    Includes: :class:`ReadRESTAPITestCaseMixin`, :class:`WriteRESTAPITestCaseMixin`.
+    """
 
     pass
