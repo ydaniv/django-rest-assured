@@ -43,6 +43,62 @@ Main features
 * Automatic login via session or token authentication.
 
 
+Usage
+-----
+
+The basic form of usage is simply to create a class that extends
+any mixin from :module:`rest_assured.testcases`, according to the
+endpoints you wish to cover, and the :class:`BaseRESTAPITestCase` class.
+
+Then just set the required attributes, and continue extending it from there.
+
+.. admonition:: example
+
+    .. code:: python
+
+        class CategoryAPITestCase(ReadWriteRESTAPITestCaseMixin, BaseRESTAPITestCase):
+
+            base_name = 'category'
+            factory_class = Category
+            create_data = {'name', 'documentary'}
+            update_data = {'name', 'horror'}
+
+If your API requires authentication and/or authorization just add
+a user factory class. Assuming you use `factory_boy <http://factoryboy.readthedocs.org/en/latest/>`_:
+
+.. admonition:: example
+
+    .. code:: python
+
+        # in some factories.py module in your accounts app
+        class User(factory.DjangoModelFactory):
+
+            class Meta:
+                model = User
+                exclude = ('raw_password',)
+
+            first_name = 'Robert'
+            last_name = factory.Sequence(lambda n: 'Paulson the {0}'.format(n))
+            email = factory.sequence(lambda n: 'account{0}@example.com'.format(n))
+            username = 'mayhem'
+            # this is required:
+            raw_password = '123'
+            password = factory.PostGenerationMethodCall('set_password', raw_password)
+            is_active = True
+
+
+        # now back in your tests.py module
+        class CategoryAPITestCase(ReadWriteRESTAPITestCaseMixin, BaseRESTAPITestCase):
+
+            base_name = 'category'
+            factory_class = Category
+            # see here:
+            user_factory = User
+            create_data = {'name', 'documentary'}
+            update_data = {'name', 'horror'}
+
+
+
 Requirements
 ------------
 
