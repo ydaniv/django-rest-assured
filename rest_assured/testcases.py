@@ -139,9 +139,9 @@ class DetailAPITestCaseMixin(object):
 
     """Adds a detail view test to the test case."""
 
-    #: A list of attribute names to check equality between the main object and the response data.
-    #  Defaults to ``['id']``.
-    #  You can also use a tuple of a string and a callable, that takes the object and returns an attribute's value.
+    #:| A list of attribute names to check equality between the main object and the response data.
+    #:| Defaults to ``['id']``.
+    #:| You can also use a tuple of a string and a callable, that takes the object and returns an attribute's value.
     attributes_to_check = ['id']
 
     def test_detail(self, **kwargs):
@@ -297,8 +297,8 @@ class UpdateAPITestCaseMixin(object):
     use_patch = True
     #: *required*: Dictionary of data to use as the update request's body.
     update_data = None
-    #: Dictionary mapping attributes to values to check against the updated instance in the database.
-    #  Defaults to ``update_data``.
+    #:| Dictionary mapping attributes to values to check against the updated instance in the database.
+    #:| Defaults to ``update_data``.
     update_results = None
 
     def get_update_data(self):
