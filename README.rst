@@ -47,8 +47,8 @@ Usage
 -----
 
 The basic form of usage is simply to create a class that extends
-any mixin from :module:`rest_assured.testcases`, according to the
-endpoints you wish to cover, and the :class:`BaseRESTAPITestCase` class.
+any mixin from ``rest_assured.testcases``, according to the
+endpoints you wish to cover, and the ``BaseRESTAPITestCase`` class.
 
 Then just set the required attributes, and continue extending it from there.
 
