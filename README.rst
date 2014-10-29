@@ -6,6 +6,19 @@
 django-rest-assured
 ===================
 
+.. image:: https://pypip.in/download/django-rest-assured/badge.svg
+        :target: https://pypi.python.org/pypi/django-rest-assured/
+        :alt: Downloads
+
+.. image:: https://pypip.in/version/django-rest-assured/badge.svg
+        :target: https://pypi.python.org/pypi/django-rest-assured/
+        :alt: Latest Version
+
+.. image:: https://pypip.in/license/django-rest-assured/badge.svg
+        :target: https://pypi.python.org/pypi/django-rest-assured/
+        :alt: License
+
+
 Instantly test-cover your Django REST Framework based API.
 
 

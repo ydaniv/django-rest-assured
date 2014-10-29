@@ -170,9 +170,9 @@ class CreateAPITestCaseMixin(object):
 
         # another sanity check:
         # getting the instance from database simply to see that it's found and does not raise any exception
-        self.object.__class__.objects.get(id=response.data.get('id'))
+        created = self.object.__class__.objects.get(id=response.data.get('id'))
 
-        return response
+        return response, created
 
     def _get_create_name(self):
         if hasattr(self, 'create_name'):
@@ -276,12 +276,12 @@ class UpdateAPITestCaseMixin(object):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # getting a fresh copy of the object from DB
-        obj = self.object.__class__.objects.get(**{self.lookup_field: object_id})
+        updated = self.object.__class__.objects.get(**{self.lookup_field: object_id})
         # Sanity check:
         # check that the copy in the database was updated as expected.
-        self._update_check_db(obj, data, results)
+        self._update_check_db(updated, data, results)
 
-        return response
+        return response, updated
 
     def _get_update_name(self):
         if hasattr(self, 'update_name'):
