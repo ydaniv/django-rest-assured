@@ -225,7 +225,7 @@ class CreateAPITestCaseMixin(object):
 
         :param data: A dictionary of the data to use for the create request.
         :param kwargs: Extra arguments that are passed to the client's ``post()`` call.
-        :returns: The view's response.
+        :returns: A tuple ``response, created`` of the view's response the created instance.
         """
 
         if data is None:
@@ -329,7 +329,7 @@ class UpdateAPITestCaseMixin(object):
         :param data: Data dictionary for the update request.
         :param results: Dictionary mapping instance properties to expected values.
         :param kwargs: Extra arguments that are passed to the client's ``put()`` or ``patch()`` call.
-        :returns: The view's response.
+        :returns: A tuple ``response, updated`` of the view's response the updated instance.
         """
 
         object_id = getattr(self.object, self.lookup_field)
