@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-rest-assured',
-    version='0.0.5',
+    version='0.0.6',
     description='Django REST Assured instantly test-covers your Django REST Framework based API.',
     # long_description=long_description,
     url='https://github.com/ydaniv/django-rest-assured',
