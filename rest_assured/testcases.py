@@ -83,9 +83,6 @@ class BaseRESTAPITestCase(APITestCase):
         The user instance will be created only if the ``user_factory`` attribute is set to the factory class.
         """
 
-        # create the object
-        self.object = self.get_object(self.get_factory_class())
-
         # create a user and log in to get permissions
         user_factory = getattr(self, 'user_factory')
         if user_factory:
@@ -95,6 +92,9 @@ class BaseRESTAPITestCase(APITestCase):
                 self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
             else:
                 self.client.login(**self.get_credentials(self.user))
+
+        # create the object
+        self.object = self.get_object(self.get_factory_class())
 
 
 class ListAPITestCaseMixin(object):
