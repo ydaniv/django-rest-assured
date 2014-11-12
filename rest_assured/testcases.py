@@ -101,6 +101,23 @@ class ListAPITestCaseMixin(object):
 
     """Adds a list view test to the test case."""
 
+    def get_list_url(self):
+        """Return the list endpoint url.
+
+        :returns: The url of list endpoint.
+        """
+
+        return reverse(self.base_name + self.LIST_SUFFIX)
+
+    def get_list_response(self, **kwargs):
+        """Send the list request and return the response.
+
+        :param kwargs: Extra arguments that are passed to the client's ``get()`` call.
+        :returns: The response object.
+        """
+
+        return self.client.get(self.get_list_url(), **kwargs)
+
     def test_list(self, **kwargs):
         """Send request to the list view endpoint, verify and return the response.
 
@@ -123,8 +140,7 @@ class ListAPITestCaseMixin(object):
         :returns: The view's response.
         """
 
-        listview = reverse(self.base_name + self.LIST_SUFFIX)
-        response = self.client.get(listview, **kwargs)
+        response = self.get_list_response(**kwargs)
 
         if response.status_code != status.HTTP_200_OK:
             print '\n%s' % response.data
@@ -143,6 +159,24 @@ class DetailAPITestCaseMixin(object):
     #:| Defaults to ``['id']``.
     #:| You can also use a tuple of a string and a callable, that takes the object and returns an attribute's value.
     attributes_to_check = ['id']
+
+    def get_detail_url(self):
+        """Return the detail endpoint url.
+
+        :returns: The url of detail endpoint.
+        """
+
+        object_id = getattr(self.object, self.lookup_field)
+        return reverse(self.base_name + self.DETAIL_SUFFIX, args=[unicode(object_id)])
+
+    def get_detail_response(self, **kwargs):
+        """Send the detail request and return the response.
+
+        :param kwargs: Extra arguments that are passed to the client's ``get()`` call.
+        :returns: The response object.
+        """
+
+        return self.client.get(self.get_detail_url(), **kwargs)
 
     def test_detail(self, **kwargs):
         """Send request to the detail view endpoint, verify and return the response.
@@ -177,10 +211,7 @@ class DetailAPITestCaseMixin(object):
         :returns: The view's response.
         """
 
-        object_id = getattr(self.object, self.lookup_field)
-
-        detailview = reverse(self.base_name + self.DETAIL_SUFFIX, args=[unicode(object_id)])
-        response = self.client.get(detailview, **kwargs)
+        response = self.get_detail_response(**kwargs)
 
         if response.status_code != status.HTTP_200_OK:
             print '\n%s' % response.data
@@ -218,6 +249,27 @@ class CreateAPITestCaseMixin(object):
 
         return getattr(self, 'create_data')
 
+    def get_create_url(self):
+        """Return the create endpoint url.
+
+        :returns: The url of create endpoint.
+        """
+
+        return reverse(self._get_create_name())
+
+    def get_create_response(self, data=None, **kwargs):
+        """Send the create request and return the response.
+
+        :param data: A dictionary of the data to use for the create request.
+        :param kwargs: Extra arguments that are passed to the client's ``post()`` call.
+        :returns: The response object.
+        """
+
+        if data is None:
+            data = self.get_create_data()
+
+        return self.client.post(self.get_create_url(), data or {}, **kwargs)
+
     def test_create(self, data=None, **kwargs):
         """Send request to the create view endpoint, verify and return the response.
 
@@ -228,11 +280,7 @@ class CreateAPITestCaseMixin(object):
         :returns: A tuple ``response, created`` of the view's response the created instance.
         """
 
-        if data is None:
-            data = self.get_create_data()
-
-        create_view = reverse(self._get_create_name())
-        response = self.client.post(create_view, data or {}, **kwargs)
+        response = self.get_create_response(data, **kwargs)
 
         if response.status_code != status.HTTP_201_CREATED:
             print '\n%s' % response.data
@@ -258,6 +306,25 @@ class DestroyAPITestCaseMixin(object):
 
     """Adds a destroy view test to the test case."""
 
+    def get_destroy_url(self):
+        """Return the destroy endpoint url.
+
+        :returns: The url of destroy endpoint.
+        """
+
+        self.object_id = getattr(self.object, self.lookup_field)
+        return reverse(self._get_destroy_name(),
+                       args=(self.object_id,))
+
+    def get_destroy_response(self, **kwargs):
+        """Send the destroy request and return the response.
+
+        :param kwargs: Extra arguments that are passed to the client's ``delete()`` call.
+        :returns: The view's response.
+        """
+
+        return self.client.delete(self.get_destroy_url(), **kwargs)
+
     def test_destroy(self, **kwargs):
         """Send request to the destroy view endpoint, verify and return the response.
 
@@ -267,16 +334,12 @@ class DestroyAPITestCaseMixin(object):
         :returns: The view's response.
         """
 
-        object_id = getattr(self.object, self.lookup_field)
-
-        destroyview = reverse(self._get_destroy_name(),
-                              args=(object_id,))
-        response = self.client.delete(destroyview, **kwargs)
+        response = self.get_destroy_response(**kwargs)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         # Another sanity check:
         # see that the instance is removed from the database.
-        self.assertRaises(ObjectDoesNotExist, self.object.__class__.objects.get, **{self.lookup_field: object_id})
+        self.assertRaises(ObjectDoesNotExist, self.object.__class__.objects.get, **{self.lookup_field: self.object_id})
 
         return response
 
@@ -300,6 +363,40 @@ class UpdateAPITestCaseMixin(object):
     #:| Dictionary mapping attributes to values to check against the updated instance in the database.
     #:| Defaults to ``update_data``.
     update_results = None
+
+    def get_update_url(self):
+        """Return the update endpoint url.
+
+        :returns: The url of update endpoint.
+        """
+
+        self.object_id = getattr(self.object, self.lookup_field)
+        return reverse(self._get_update_name(),
+                       args=(self.object_id,))
+
+    def get_update_response(self, data=None, results=None, use_patch=None, **kwargs):
+        """Send the update request and return the response.
+
+        :param data: Data dictionary for the update request.
+        :param results: Dictionary mapping instance properties to expected values.
+        :param kwargs: Extra arguments that are passed to the client's ``put()`` or ``patch()`` call.
+        :returns: The response object.
+        """
+
+        if data is None:
+            data = self.get_update_data()
+            self.__data = data
+
+        if results is None:
+            results = self.get_update_results(data)
+            self.__results = results
+
+        args = [self.get_update_url(), data]
+
+        if use_patch is None:
+            use_patch = self.use_patch
+
+        return self.client.patch(*args) if use_patch else self.client.put(*args)
 
     def get_update_data(self):
         """Return the data used for the update request.
@@ -332,20 +429,7 @@ class UpdateAPITestCaseMixin(object):
         :returns: A tuple ``response, updated`` of the view's response the updated instance.
         """
 
-        object_id = getattr(self.object, self.lookup_field)
-        update_view = reverse(self._get_update_name(),
-                              args=(object_id,))
-        if data is None:
-            data = self.get_update_data()
-
-        if results is None:
-            results = self.get_update_results(data)
-
-        args = [update_view, data]
-        if use_patch is None:
-            use_patch = self.use_patch
-
-        response = self.client.patch(*args) if use_patch else self.client.put(*args)
+        response = self.get_update_response(data, results, use_patch, **kwargs)
 
         if response.status_code == status.HTTP_400_BAD_REQUEST:
             print '\n%s' % response.data
@@ -353,7 +437,7 @@ class UpdateAPITestCaseMixin(object):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # getting a fresh copy of the object from DB
-        updated = self.object.__class__.objects.get(**{self.lookup_field: object_id})
+        updated = self.object.__class__.objects.get(**{self.lookup_field: self.object_id})
         # Sanity check:
         # check that the copy in the database was updated as expected.
         self._update_check_db(updated, data, results)
@@ -368,9 +452,12 @@ class UpdateAPITestCaseMixin(object):
 
         return view_name
 
-    def _update_check_db(self, obj, data, results):
+    def _update_check_db(self, obj, data=None, results=None):
+        if data is None:
+            data = self.__data
+
         if results is None:
-            results = {}
+            results = self.__results or {}
 
         for key, value in data.iteritems():
             # check for foreign key
