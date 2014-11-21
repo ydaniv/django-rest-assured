@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
+from six import text_type
 
 
 class BaseRESTAPITestCase(APITestCase):
@@ -142,10 +143,7 @@ class ListAPITestCaseMixin(object):
 
         response = self.get_list_response(**kwargs)
 
-        if response.status_code != status.HTTP_200_OK:
-            print '\n%s' % response.data
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
         self.assertIn('results', response.data)
 
         return response
@@ -167,7 +165,7 @@ class DetailAPITestCaseMixin(object):
         """
 
         object_id = getattr(self.object, self.lookup_field)
-        return reverse(self.base_name + self.DETAIL_SUFFIX, args=[unicode(object_id)])
+        return reverse(self.base_name + self.DETAIL_SUFFIX, args=[text_type(object_id)])
 
     def get_detail_response(self, **kwargs):
         """Send the detail request and return the response.
@@ -213,10 +211,7 @@ class DetailAPITestCaseMixin(object):
 
         response = self.get_detail_response(**kwargs)
 
-        if response.status_code != status.HTTP_200_OK:
-            print '\n%s' % response.data
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
         self._check_attributes(response.data)
 
         return response
@@ -227,9 +222,9 @@ class DetailAPITestCaseMixin(object):
                 value = attr[1](self.object)
                 attr = attr[0]
             else:
-                value = unicode(getattr(self.object, attr))
+                value = text_type(getattr(self.object, attr))
 
-            self.assertEqual(value, data[attr])
+            self.assertEqual(value, text_type(data[attr]))
 
 
 class CreateAPITestCaseMixin(object):
@@ -282,10 +277,7 @@ class CreateAPITestCaseMixin(object):
 
         response = self.get_create_response(data, **kwargs)
 
-        if response.status_code != status.HTTP_201_CREATED:
-            print '\n%s' % response.data
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
 
         # another sanity check:
         # getting the instance from database simply to see that it's found and does not raise any exception
@@ -336,7 +328,7 @@ class DestroyAPITestCaseMixin(object):
 
         response = self.get_destroy_response(**kwargs)
 
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.data)
         # Another sanity check:
         # see that the instance is removed from the database.
         self.assertRaises(ObjectDoesNotExist, self.object.__class__.objects.get, **{self.lookup_field: self.object_id})
@@ -431,10 +423,7 @@ class UpdateAPITestCaseMixin(object):
 
         response = self.get_update_response(data, results, use_patch, **kwargs)
 
-        if response.status_code == status.HTTP_400_BAD_REQUEST:
-            print '\n%s' % response.data
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 
         # getting a fresh copy of the object from DB
         updated = self.object.__class__.objects.get(**{self.lookup_field: self.object_id})
@@ -466,15 +455,15 @@ class UpdateAPITestCaseMixin(object):
                 # hack to check if there's a uuid field and use it instead of pk
                 # because of the issue with setting it as primary for Accounts
                 if hasattr(related, 'uuid'):
-                    attribute = unicode(related.uuid)
+                    attribute = text_type(related.uuid)
                 else:
-                    attribute = unicode(related.pk)
+                    attribute = text_type(related.pk)
             else:
                 attribute = getattr(obj, key)
                 # Handle case of a ManyToMany relation
                 if isinstance(attribute, Manager):
                     for pk in value:
-                        self.assertIn(pk, [unicode(item.pk) for item in attribute.all()])
+                        self.assertIn(pk, [text_type(item.pk) for item in attribute.all()])
                     return True
 
             self.assertEqual(attribute, results.get(key, value))
