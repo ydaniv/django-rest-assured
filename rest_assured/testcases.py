@@ -1,7 +1,6 @@
 from django.db.models import Manager
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
-from rest_framework.authtoken.models import Token
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from six import text_type
@@ -21,13 +20,11 @@ class BaseRESTAPITestCase(APITestCase):
     DETAIL_SUFFIX = '-detail'
     #: The field to use for DB and route lookups. Defaults to ``'pk'``.
     lookup_field = 'pk'
-    #: User factory to use in case you need to login for auth/permissions testing. Defaults to ``None``.
+    #: User factory to use in case you need user authentication for testing. Defaults to ``None``.
     user_factory = None
-    #: Whether to use token authentication instead of session. Defaults to ``False``.
-    use_token_auth = False
     #: The main test subject.
     object = None
-    #: The user instance created if the ``user_factory`` is set and used. Defaults to ``False``.
+    #: The user instance created if the ``user_factory`` is set and used. Defaults to ``None``.
     user = None
 
     def get_factory_class(self):
@@ -52,47 +49,19 @@ class BaseRESTAPITestCase(APITestCase):
 
         return factory.create()
 
-    def get_credentials(self, user):
-        """Return the credentials dictionary.
-
-        By default this consists getting the ``username`` field of the ``user`` instance
-        and the ``raw_password`` attribute of the ``user_factory`` attribute of this class.
-
-        :param user: The user instance that will be used to login.
-        :returns: A dictionary of credentials for user login.
-
-        .. admonition:: example
-
-            .. code:: python
-
-                {'username': 'ydaniv'
-                 'password': 'bellbottoms'}
-
-        .. note: This method assumes you set the user's password in plain text in ``user_factory.raw_password``.
-        """
-
-        return {
-            'username': user.get_username(),
-            'password': self.user_factory.raw_password}
-
     def setUp(self):
         """Generates the main object and user instance if needed.
 
-        | The user will also be logged in automatically, using the ``login()`` method of the test's client.
-        | You can opt for token authentication by setting the class' ``use_token_auth`` to ``True``.
-
         The user instance will be created only if the ``user_factory`` attribute is set to the factory class.
+
+        If there is an available user instance, that user will be force authenticated.
         """
 
-        # create a user and log in to get permissions
+        # create and force authenticate user
         user_factory = getattr(self, 'user_factory')
         if user_factory:
             self.user = user_factory.create()
-            if self.use_token_auth:
-                token = Token.objects.get(user=self.user)
-                self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
-            else:
-                self.client.login(**self.get_credentials(self.user))
+            self.client.force_authenticate(self.user)
 
         # create the object
         self.object = self.get_object(self.get_factory_class())
