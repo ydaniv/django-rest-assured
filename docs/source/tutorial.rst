@@ -161,6 +161,7 @@ Let's write the tests! This shall be our ``tests.py`` file:
 
        def setUp(self):
           self.author = factories.Author.create()
+          super(EntryAPITestCase, self).setUp()
 
        def get_object(self, factory):
            return factory.create(authors=[self.author])
@@ -276,6 +277,7 @@ Then our ``tests.py`` now needs to be:
 
        def setUp(self):
           self.author = factories.Author.create()
+          super(EntryAPITestCase, self).setUp()
 
        def get_object(self, factory):
            return factory.create(authors=[self.author])
