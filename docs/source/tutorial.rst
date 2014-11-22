@@ -243,7 +243,7 @@ We'll need to tweak some settings:
 
 Running our tests now will fail, since all responses will return with a 401 status. Which is great.
 
-Let's also assume you we followed the example in Django REST Framework's docs and created a signal
+Let's also assume we followed the example in Django REST Framework's docs and created a signal
 receiver that creates a Token instance for every newly created user.
 
 For simplicity, also, let's assume that that ``User`` factory resides in the previous ``factories.py``
