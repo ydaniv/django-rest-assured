@@ -1,7 +1,7 @@
 Authored by:
 ------------
 
-Yehonatan Daniv <maggotfish@gmail.com>
+Yehonatan Daniv @ydaniv
 
 
 With conributions by:
