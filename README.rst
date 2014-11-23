@@ -112,7 +112,7 @@ Requirements
 * Django >= 1.6
 * Django REST Framework >= 2.4.3
 
-Currently developed only for python 2.7.
+Currently supporting python 2.7 & 3.4.
 
 
 Installation
