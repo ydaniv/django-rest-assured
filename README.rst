@@ -47,7 +47,7 @@ Main features
 * Covers the stack through: ``route > view > serializer > model``.
 * Uses Django REST Framework's conventions to minimize configuration.
 * All tests return the response object for more extensive assertions.
-* Automatic login via session or token authentication.
+* Automatic mocking of authentication if a user factory is provided.
 
 
 Usage
