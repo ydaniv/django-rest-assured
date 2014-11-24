@@ -4,5 +4,7 @@ Authored by:
 Yehonatan Daniv @ydaniv
 
 
-With conributions by:
----------------------
+With contributions by:
+----------------------
+
+Tymur Maryokhin @maryokhin
