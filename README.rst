@@ -88,7 +88,6 @@ a user factory class. Assuming you use `factory_boy <http://factoryboy.readthedo
             last_name = factory.Sequence(lambda n: 'Paulson the {0}'.format(n))
             email = factory.sequence(lambda n: 'account{0}@example.com'.format(n))
             username = 'mayhem'
-            # this is required:
             raw_password = '123'
             password = factory.PostGenerationMethodCall('set_password', raw_password)
             is_active = True
