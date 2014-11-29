@@ -1,6 +1,10 @@
 Tutorial
 ========
 
+.. note::
+
+   You can clone this example and run the tests yourself from: `https://github.com/ydaniv/django-rest-assured-demo`_.
+
 Let's take a look at an
 `example from the Django documentation <https://docs.djangoproject.com/en/dev/topics/db/queries/>`_
 of a Weblog application:
