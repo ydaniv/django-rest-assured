@@ -246,7 +246,7 @@ class CreateAPITestCaseMixin(object):
 
         response = self.get_create_response(data, **kwargs)
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, getattr(response, 'data', response))
 
         # another sanity check:
         # getting the instance from database simply to see that it's found and does not raise any exception
