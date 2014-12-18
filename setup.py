@@ -32,7 +32,7 @@ setup(
     author_email='maggotfish@gmail.com',
     license='BSD',
     packages=find_packages(),
-    install_requires=["django>=1.6", "djangorestframework>=2.4.3"],
+    install_requires=["django>=1.6", "djangorestframework>=2.4.3", "six"],
     zip_safe=False,
     cmdclass={'test': PyTest},
     classifiers=[
