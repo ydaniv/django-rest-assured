@@ -1,8 +1,25 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, Command
 
 
 # with open('README.rst') as f:
 #     long_description = f.read()
+
+
+class PyTest(Command):
+
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        import sys
+        import subprocess
+        errno = subprocess.call([sys.executable, 'runtests.py'])
+        raise SystemExit(errno)
 
 
 setup(
@@ -15,8 +32,9 @@ setup(
     author_email='maggotfish@gmail.com',
     license='BSD',
     packages=find_packages(),
-    install_requires=["django >= 1.6", "djangorestframework >= 2.4.3"],
+    install_requires=["django>=1.6", "djangorestframework>=2.4.3"],
     zip_safe=False,
+    cmdclass={'test': PyTest},
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
