@@ -9,11 +9,11 @@ import pytest
 
 
 PYTEST_ARGS = {
-    'default': ['rest_assured/tests'],
-    'fast': ['rest_assured/tests', '-q'],
+    'default': ['tests'],
+    'fast': ['tests', '-q'],
 }
 
-FLAKE8_ARGS = ['rest_assured', 'rest_assured/tests', '--ignore=E501']
+FLAKE8_ARGS = ['rest_assured', 'tests', '--ignore=E501']
 
 sys.path.append(os.path.dirname(__file__))
 

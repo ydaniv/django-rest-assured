@@ -1,4 +1,4 @@
-from rest_assured.tests import mocks
+from tests import mocks
 
 
 class TestBaseTestCase:

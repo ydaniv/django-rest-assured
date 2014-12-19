@@ -3,7 +3,7 @@ from django.conf import settings
 
 def pytest_configure():
     settings.configure(
-        ROOT_URLCONF='rest_assured.tests.urls',
+        ROOT_URLCONF='tests.urls',
 
         DATABASES={
             'default': {
@@ -18,7 +18,7 @@ def pytest_configure():
             'django.contrib.sessions',
 
             'rest_framework',
-            'rest_assured.tests',
+            'tests',
         ]
     )
 

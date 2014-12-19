@@ -1,7 +1,7 @@
 from rest_framework import viewsets, serializers
 
 from rest_assured.testcases import BaseRESTAPITestCase
-from rest_assured.tests.models import Stuff
+from tests.models import Stuff
 
 
 class MockObject(object):

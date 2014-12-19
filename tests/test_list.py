@@ -1,5 +1,5 @@
 from rest_assured.testcases import ListAPITestCaseMixin
-from rest_assured.tests import mocks
+from tests import mocks
 
 
 class TestListTestCase:
