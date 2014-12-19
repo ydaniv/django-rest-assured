@@ -1,7 +1,7 @@
 from rest_framework import viewsets, serializers
 
 from rest_assured.testcases import BaseRESTAPITestCase
-from rest_assured.tests import models
+from rest_assured.tests.models import Stuff
 
 
 class MockObject(object):
@@ -17,7 +17,7 @@ class MockFactory(object):
 class StuffFactory(object):
     @classmethod
     def create(cls):
-        return models.Stuff.objects.create(name='name of stuff')
+        return Stuff.objects.create(name='name of stuff')
 
 
 class MockUser(object):
@@ -54,9 +54,9 @@ class MockTestCase(BaseRESTAPITestCase):
 
 class StuffSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Stuff
+        model = Stuff
 
 
 class StuffViewSet(viewsets.ModelViewSet):
-    model = models.Stuff
+    queryset = Stuff.objects.all()
     serializer_class = StuffSerializer
