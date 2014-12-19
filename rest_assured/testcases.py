@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-from six import text_type
+from django.utils.six import text_type
 
 
 class BaseRESTAPITestCase(APITestCase):
