@@ -1,9 +1,7 @@
-from . import settings
-from .import mocks
+from rest_assured.tests import mocks
 
 
 class TestBaseTestCase:
-
     def test_get_factory_class(self):
         instance = mocks.MockTestCase(methodName='dummy')
         assert instance.get_factory_class() is mocks.MockFactory

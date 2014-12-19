@@ -1,13 +1,13 @@
 from django.conf.urls import patterns, url, include
 from rest_framework import routers
-from . import mocks
+
+from rest_assured.tests import mocks
 
 
 router = routers.DefaultRouter()
 
 router.register(r'stuff', mocks.StuffViewSet, base_name='stuff')
 
-urlpatterns = patterns(
-    '',
+urlpatterns = patterns('',
     url(r'^', include(router.urls)),
 )

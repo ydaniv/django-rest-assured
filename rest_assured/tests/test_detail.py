@@ -1,13 +1,10 @@
-from . import settings
-from .import urls, mocks
 from rest_assured.testcases import DetailAPITestCaseMixin
+from rest_assured.tests import mocks
 
 
 class TestDetailTestCase:
-
     def get_case(self, **kwargs):
         class MockDetailTestCase(DetailAPITestCaseMixin, mocks.MockTestCase):
-
             base_name = 'stuff'
             factory_class = mocks.StuffFactory
 

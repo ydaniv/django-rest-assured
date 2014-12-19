@@ -1,13 +1,10 @@
-from . import settings
-from .import urls, mocks
 from rest_assured.testcases import CreateAPITestCaseMixin
+from rest_assured.tests import mocks
 
 
 class TestCreateTestCase:
-
     def get_case(self, **kwargs):
         class MockCreateTestCase(CreateAPITestCaseMixin, mocks.MockTestCase):
-
             base_name = 'stuff'
             factory_class = mocks.StuffFactory
             create_data = {"name": "moar stuff"}
