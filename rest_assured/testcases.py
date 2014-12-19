@@ -1,5 +1,6 @@
 from django.db.models import Manager
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import six
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
@@ -122,9 +123,9 @@ class DetailAPITestCaseMixin(object):
 
     """Adds a detail view test to the test case."""
 
-    #:| A list of attribute names to check equality between the main object and the response data.
-    #:| Defaults to ``['id']``.
-    #:| You can also use a tuple of a string and a callable, that takes the object and returns an attribute's value.
+    # A list of attribute names to check equality between the main object and the response data.
+    # Defaults to ``['id']``.
+    # You can also use a tuple of a string and a callable, that takes the object and returns an attribute's value.
     attributes_to_check = ['id']
 
     def get_detail_url(self):
@@ -321,8 +322,8 @@ class UpdateAPITestCaseMixin(object):
     use_patch = True
     #: *required*: Dictionary of data to use as the update request's body.
     update_data = None
-    #:| Dictionary mapping attributes to values to check against the updated instance in the database.
-    #:| Defaults to ``update_data``.
+    # Dictionary mapping attributes to values to check against the updated instance in the database.
+    # Defaults to ``update_data``.
     update_results = None
 
     def get_update_url(self):
@@ -417,7 +418,7 @@ class UpdateAPITestCaseMixin(object):
         if results is None:
             results = self.__results or {}
 
-        for key, value in data.iteritems():
+        for key, value in six.iteritems(data):
             # check for foreign key
             if hasattr(obj, '%s_id' % key):
                 related = getattr(obj, key)
