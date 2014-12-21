@@ -28,7 +28,7 @@ def pytest_configure():
     try:
         from django import setup
     except ImportError:
-        pass
+        call_command('syncdb')
     else:
         setup()
         call_command('migrate')
