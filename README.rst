@@ -1,6 +1,10 @@
 django-rest-assured
 ===================
 
+.. image:: https://secure.travis-ci.org/ydaniv/django-rest-assured.png
+        :target: http://travis-ci.org/ydaniv/django-rest-assured/
+        :alt: Build
+
 .. image:: https://pypip.in/download/django-rest-assured/badge.svg
         :target: https://pypi.python.org/pypi/django-rest-assured/
         :alt: Downloads
@@ -105,13 +109,14 @@ a user factory class. Assuming you use `factory_boy <http://factoryboy.readthedo
 
 
 
-Requirements
-------------
+Supports
+--------
 
-* Django >= 1.6
-* Django REST Framework >= 2.4.3
+Tests run against:
 
-Currently supporting python 2.7 & 3.4.
+* Django 1.6 & 1.7
+* Django REST Framework 2.4.3, 2.4.4 & 3.0
+* Python 2.7, 3.2, 3.3 & 3.4.
 
 
 Installation
@@ -137,6 +142,14 @@ Contributing
 Issues are tracked in the `github repository <https://github.com/ydaniv/django-rest-assured/issues/>`_.
 
 Pull requests are welcome!
+
+
+Running tests
+-------------
+
+.. code-block:: sh
+
+   $ python runtests.py
 
 
 License
