@@ -1,5 +1,6 @@
 from rest_assured.testcases import CreateAPITestCaseMixin
 from tests import mocks
+from tests.models import Stuff
 
 
 class TestCreateTestCase:
@@ -31,5 +32,5 @@ class TestCreateTestCase:
         response, created = instance.test_create()
         assert response
         assert created
-        assert isinstance(created, mocks.models.Stuff)
+        assert isinstance(created, Stuff)
         assert response.data['name'] == created.name

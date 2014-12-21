@@ -1,9 +1,12 @@
 from django.conf import settings
+from django.core.management import call_command
 
 
 def pytest_configure():
     settings.configure(
         ROOT_URLCONF='tests.urls',
+
+        ALLOWED_HOSTS=['testserver'],
 
         DATABASES={
             'default': {
@@ -22,10 +25,10 @@ def pytest_configure():
         ]
     )
 
-
-try:
-    import django
-
-    django.setup()
-except AttributeError:
-    pass
+    try:
+        from django import setup
+    except ImportError:
+        pass
+    else:
+        setup()
+        call_command('migrate')

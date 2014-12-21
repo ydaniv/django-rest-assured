@@ -60,3 +60,4 @@ class StuffSerializer(serializers.ModelSerializer):
 class StuffViewSet(viewsets.ModelViewSet):
     queryset = Stuff.objects.all()
     serializer_class = StuffSerializer
+    paginate_by = 10

@@ -1,5 +1,6 @@
 from rest_assured.testcases import UpdateAPITestCaseMixin
 from tests import mocks
+from tests.models import Stuff
 
 
 class TestUpdateTestCase:
@@ -33,5 +34,5 @@ class TestUpdateTestCase:
         response, updated = instance.test_update()
         assert response
         assert updated
-        assert isinstance(updated, mocks.models.Stuff)
+        assert isinstance(updated, Stuff)
         assert response.data['name'] == updated.name
