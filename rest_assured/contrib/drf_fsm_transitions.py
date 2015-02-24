@@ -9,7 +9,7 @@ class TransitionAPITestCaseMixin(object):
     the DRF-FSM-Transition library.
     """
 
-    def transition(self, result, route, attribute='status', from_state=None):
+    def transition(self, result, route, attribute='status', from_state=None, data=None):
 
         """Send request to a transition view endpoint, verify and return the response.
 
@@ -25,7 +25,7 @@ class TransitionAPITestCaseMixin(object):
 
         updateview = reverse(self.base_name + self.DETAIL_SUFFIX,
                              args=(self.object.pk,)) + '%s/' % route
-        response = self.client.post(updateview)
+        response = self.client.post(updateview, data)
 
         self.assertEqual(response.data[attribute], result)
 
