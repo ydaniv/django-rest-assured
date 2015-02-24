@@ -1,3 +1,10 @@
+0.1.1 (TBD)
+___________
+
+*New:*
+
+    Added data argument to TransitionAPITestCaseMixin.transition() to pass to client.post() as data.
+
 0.1 (2014-12-21)
 ----------------
 
