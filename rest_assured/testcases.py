@@ -358,7 +358,7 @@ class UpdateAPITestCaseMixin(object):
         if use_patch is None:
             use_patch = self.use_patch
 
-        return self.client.patch(*args) if use_patch else self.client.put(*args)
+        return self.client.patch(*args, **kwargs) if use_patch else self.client.put(*args, **kwargs)
 
     def get_update_data(self):
         """Return the data used for the update request.
