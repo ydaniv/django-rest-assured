@@ -3,7 +3,9 @@ ___________
 
 *New:*
 
-    Added data argument to TransitionAPITestCaseMixin.transition() to pass to client.post() as data.
+    Added missing kwargs in ``get_update_response()`` (Thanks, @sramana!).
+
+    Added ``data`` argument to ``TransitionAPITestCaseMixin.transition()`` to pass to ``client.post()`` as data.
 
 0.1 (2014-12-21)
 ----------------
