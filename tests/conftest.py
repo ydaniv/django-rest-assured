@@ -11,7 +11,7 @@ def pytest_configure():
         DATABASES={
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': 'test'
+                'NAME': 'test_db'
             }
         },
 

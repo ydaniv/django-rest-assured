@@ -203,6 +203,8 @@ class CreateAPITestCaseMixin(object):
 
     #: *required*: Dictionary of data to use as the POST request's body.
     create_data = None
+    #: The name of the field in the response data for looking up the created object in DB.
+    response_lookup_field = 'id'
 
     def get_create_data(self):
         """Return the data used for the create request.
@@ -235,6 +237,16 @@ class CreateAPITestCaseMixin(object):
 
         return self.client.post(self.get_create_url(), data or {}, **kwargs)
 
+    def get_lookup_from_response(self, data):
+        """Return value for looking up the created object in DB.
+
+        :Note: The created object will be looked up using the ``lookup_field`` attribute as key, which defaults to ``pk``.
+
+        :param data: A dictionary of the response data to lookup the field in.
+        :returns: The value for looking up the
+        """
+        return data.get(self.response_lookup_field)
+
     def test_create(self, data=None, **kwargs):
         """Send request to the create view endpoint, verify and return the response.
 
@@ -251,7 +263,8 @@ class CreateAPITestCaseMixin(object):
 
         # another sanity check:
         # getting the instance from database simply to see that it's found and does not raise any exception
-        created = self.object.__class__.objects.get(id=response.data.get('id'))
+        created = self.object.__class__.objects.get(
+            **{self.lookup_field: self.get_lookup_from_response(response.data)})
 
         return response, created
 
@@ -322,9 +335,11 @@ class UpdateAPITestCaseMixin(object):
     use_patch = True
     #: *required*: Dictionary of data to use as the update request's body.
     update_data = None
-    # Dictionary mapping attributes to values to check against the updated instance in the database.
-    # Defaults to ``update_data``.
+    #: Dictionary mapping attributes to values to check against the updated instance in the database.
+    #: Defaults to ``update_data``.
     update_results = None
+    #: The name of the field in the response data for looking up the created object in DB.
+    relationship_lookup_field = 'id'
 
     def get_update_url(self):
         """Return the update endpoint url.
@@ -382,6 +397,19 @@ class UpdateAPITestCaseMixin(object):
 
         return getattr(self, 'update_results', data)
 
+    def get_relationship_value(self, related_obj, key):
+        """Return a value representing a relation to a related model instance.
+
+        By default gets the ``relationship_lookup_field`` attribute of this class
+        which defaults to ``id``, and converts it to a ``string``.
+
+        :param related_obj: The related model instance to convert to a value.
+        :param key: A ``string`` representing the name of the relation, or the key on the updated object.
+        :returns: Value representing the relation to assert against.
+        """
+
+        return text_type(getattr(related_obj, getattr(self, 'relationship_lookup_field')))
+
     def test_update(self, data=None, results=None, use_patch=None, **kwargs):
         """Send request to the update view endpoint, verify and return the response.
 
@@ -419,22 +447,25 @@ class UpdateAPITestCaseMixin(object):
             results = self.__results or {}
 
         for key, value in six.iteritems(data):
-            # check for foreign key
-            if hasattr(obj, '%s_id' % key):
-                related = getattr(obj, key)
-                # hack to check if there's a uuid field and use it instead of pk
-                # because of the issue with setting it as primary for Accounts
-                if hasattr(related, 'uuid'):
-                    attribute = text_type(related.uuid)
-                else:
-                    attribute = text_type(related.pk)
+            # check if ``obj`` is a dict to allow overriding ``_update_check_db()``
+            # and perform checks on a serialized object
+            if isinstance(obj, dict):
+                attribute = obj.get(key)
+                if isinstance(attribute, list):
+                    self.assertListEqual(attribute, value)
+                    continue
             else:
-                attribute = getattr(obj, key)
-                # Handle case of a ManyToMany relation
-                if isinstance(attribute, Manager):
-                    for pk in value:
-                        self.assertIn(pk, [text_type(item.pk) for item in attribute.all()])
-                    return True
+                # check for foreign key
+                if hasattr(obj, '%s_id' % key):
+                    related = getattr(obj, key)
+                    attribute = self.get_relationship_value(related, key)
+                else:
+                    attribute = getattr(obj, key)
+                    # Handle case of a ManyToMany relation
+                    if isinstance(attribute, Manager):
+                        items = {self.get_relationship_value(item, key) for item in attribute.all()}
+                        self.assertTrue(set(value).issubset(items))
+                        continue
 
             self.assertEqual(attribute, results.get(key, value))
 
