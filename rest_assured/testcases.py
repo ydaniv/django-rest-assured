@@ -69,9 +69,11 @@ class BaseRESTAPITestCase(APITestCase):
 
 
 class ListAPITestCaseMixin(object):
-    pagination_results_field = 'results'
 
     """Adds a list view test to the test case."""
+
+    #: When using pagination set this attribute to the name of the property in the response data that holds the result set. Defaults to ``None``.
+    pagination_results_field = None
 
     def get_list_url(self):
         """Return the list endpoint url.
@@ -115,10 +117,13 @@ class ListAPITestCaseMixin(object):
         response = self.get_list_response(**kwargs)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+
         results = response.data
+
         if self.pagination_results_field:
             self.assertIn(self.pagination_results_field, response.data)
             results = results[self.pagination_results_field]
+
         self.assertTrue(len(results) >= 1)
 
         return response

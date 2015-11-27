@@ -1,5 +1,13 @@
-0.2.0 (TBD)
------------
+0.2.0 (2015-11-27)
+------------------
+
+*Support:*
+
+ - Updated support and now also tested against Python 3.5, Django 1.8 and 1.9, and DRF 3.1, 3.2 and 3.3.
+
+*Breaking:*
+
+ - A new ``pagination_results_field`` attribute on the ``ListAPITestCaseMixin`` that controls the name of the key the result set is nested under. This was previously hardcoded to ``'results'`` but now defaults to ``None``, which means the test assumes pagination is turned off.
 
 *New:*
 
@@ -12,10 +20,6 @@
  - Allow passing a dictionary to ``_update_check_db()`` for performing checks on serialized object.
 
  - ``data`` argument to ``TransitionAPITestCaseMixin.transition()`` to pass to ``client.post()`` as data.
-
-*Changed:*
-
- - Updated support for Django 1.8 and Django REST Framework 3.1.
 
 *Removed:*
 
