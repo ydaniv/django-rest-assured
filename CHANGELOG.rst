@@ -3,7 +3,7 @@
 
 *Support:*
 
- - Updated support and now also tested against Python 3.5, Django 1.8 and 1.9, and DRF 3.1, 3.2 and 3.3.
+ - Updated support and now also tested against Django 1.8, and DRF 3.1, 3.2 and 3.3.
 
 *Breaking:*
 
