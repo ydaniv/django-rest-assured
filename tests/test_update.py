@@ -1,10 +1,12 @@
+from django.test import TestCase
+
 from rest_framework.reverse import reverse
 from rest_assured.testcases import UpdateAPITestCaseMixin
 from tests import mocks
 from tests.models import Stuff, RelatedStuff
 
 
-class TestUpdateTestCase:
+class TestUpdateTestCase(TestCase):
     def get_case(self, **kwargs):
         class MockUpdateTestCase(UpdateAPITestCaseMixin, mocks.MockTestCase):
             base_name = kwargs.pop('base_name', 'stuff')

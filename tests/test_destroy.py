@@ -1,8 +1,10 @@
+from django.test import TestCase
+
 from rest_assured.testcases import DestroyAPITestCaseMixin
 from tests import mocks
 
 
-class TestDestroyTestCase:
+class TestDestroyTestCase(TestCase):
     def get_case(self, **kwargs):
         class MockDestroyTestCase(DestroyAPITestCaseMixin, mocks.MockTestCase):
             base_name = 'stuff'
