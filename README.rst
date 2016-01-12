@@ -33,7 +33,7 @@ As easy as
 .. code-block:: python
 
     class CategoryTestCase(ReadWriteRESTAPITestCaseMixin, BaseRESTAPITestCase):
-    
+
         base_name = 'category'
         factory_class = CategoryFactory
         create_data = {'name': 'comedy'}
@@ -149,7 +149,8 @@ Running tests
 
 .. code-block:: sh
 
-   $ python runtests.py
+   $ pip install pytest pytest-django
+   $ py.test
 
 
 License
