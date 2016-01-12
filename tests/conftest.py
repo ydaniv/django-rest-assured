@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.core.management import call_command
 
 
 def pytest_configure():
@@ -24,11 +23,3 @@ def pytest_configure():
             'tests',
         ]
     )
-
-    try:
-        from django import setup
-    except ImportError:
-        call_command('syncdb', interactive=False)
-    else:
-        setup()
-        call_command('migrate')
