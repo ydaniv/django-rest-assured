@@ -1,8 +1,10 @@
+from django.test import TestCase
+
 from rest_assured.testcases import DetailAPITestCaseMixin
 from tests import mocks
 
 
-class TestDetailTestCase:
+class TestDetailTestCase(TestCase):
     def get_case(self, **kwargs):
         class MockDetailTestCase(DetailAPITestCaseMixin, mocks.MockTestCase):
             base_name = 'stuff'

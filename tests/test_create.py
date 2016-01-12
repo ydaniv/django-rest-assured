@@ -1,9 +1,11 @@
+from django.test import TestCase
+
 from rest_assured.testcases import CreateAPITestCaseMixin
 from tests import mocks
 from tests.models import Stuff
 
 
-class TestCreateTestCase:
+class TestCreateTestCase(TestCase):
     def get_case(self, **kwargs):
         class MockCreateTestCase(CreateAPITestCaseMixin, mocks.MockTestCase):
             base_name = kwargs.pop('base_name', 'stuff')
