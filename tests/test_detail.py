@@ -36,5 +36,3 @@ class TestDetailTestCase(TestCase):
         instance.setUp()
         response = instance.test_detail()
         assert response
-
-

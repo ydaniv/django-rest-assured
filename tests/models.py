@@ -4,7 +4,7 @@ from rest_framework.reverse import reverse
 
 class Stuff(models.Model):
     name = models.CharField(max_length=200)
-    answer = models.PositiveSmallIntegerField(null=True)
+    answer = models.PositiveSmallIntegerField(null=True, blank=True)
 
     class Meta:
         app_label = 'tests'
