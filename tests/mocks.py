@@ -19,6 +19,8 @@ class StuffFactory(object):
     def create(cls, **kwargs):
         if 'name' not in kwargs:
             kwargs['name'] = 'name of stuff'
+        if 'answer' not in kwargs:
+            kwargs['answer'] = 42
         return Stuff.objects.create(**kwargs)
 
 
