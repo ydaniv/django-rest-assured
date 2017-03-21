@@ -1,3 +1,14 @@
+0.2.1 (2017-21-21)
+------------------
+
+*Fixed:*
+
+ - Fixed bug that caused attribute checks in ``test_detail`` with callables in ``attributes_to_check`` to fail.
+
+*Removed:*
+
+ - Official support for Python 3.2 since it's not supported by py.test.
+
 0.2.0 (2015-11-27)
 ------------------
 
