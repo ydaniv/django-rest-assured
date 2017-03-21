@@ -29,3 +29,10 @@ class TestDetailTestCase(TestCase):
         instance.setUp()
         response = instance.test_detail()
         assert response
+
+    def test_test_detail_callable_attribute(self):
+        instance = self.get_case(methodName='dummy')
+        instance.attributes_to_check = ['name', ('answer', lambda o: o.answer)]
+        instance.setUp()
+        response = instance.test_detail()
+        assert response

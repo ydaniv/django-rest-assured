@@ -199,7 +199,7 @@ class DetailAPITestCaseMixin(object):
     def _check_attributes(self, data):
         for attr in self.attributes_to_check:
             if isinstance(attr, (tuple, list, set)):
-                value = attr[1](self.object)
+                value = text_type(attr[1](self.object))
                 attr = attr[0]
             else:
                 value = text_type(getattr(self.object, attr))

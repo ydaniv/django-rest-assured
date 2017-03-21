@@ -116,7 +116,7 @@ Tests run against:
 
 * Django 1.6, 1.7, 1.8 & 1.9.
 * Django REST Framework 2.4.3, 2.4.4, 3.0, 3.1, 3.2 & 3.3.
-* Python 2.7, 3.2, 3.3, 3.4 & 3.5.
+* Python 2.7, 3.3, 3.4 & 3.5 (3.2 should work but is not tested).
 
 
 Installation
