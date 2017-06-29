@@ -204,7 +204,7 @@ class DetailAPITestCaseMixin(object):
             else:
                 value = text_type(getattr(self.object, attr))
 
-            self.assertEqual(value, text_type(data[attr]))
+            self.assertEqual(value, text_type(data[attr]), attr)
 
 
 class CreateAPITestCaseMixin(object):
@@ -462,7 +462,7 @@ class UpdateAPITestCaseMixin(object):
             if isinstance(obj, dict):
                 attribute = obj.get(key)
                 if isinstance(attribute, list):
-                    self.assertListEqual(attribute, value)
+                    self.assertListEqual(attribute, value, key)
                     continue
             else:
                 # check for foreign key
@@ -474,10 +474,10 @@ class UpdateAPITestCaseMixin(object):
                     # Handle case of a ManyToMany relation
                     if isinstance(attribute, Manager):
                         items = {self.get_relationship_value(item, key) for item in attribute.all()}
-                        self.assertTrue(set(value).issubset(items))
+                        self.assertTrue(set(value).issubset(items), key)
                         continue
 
-            self.assertEqual(attribute, results.get(key, value))
+            self.assertEqual(attribute, results.get(key, value), key)
 
 
 class ReadRESTAPITestCaseMixin(ListAPITestCaseMixin, DetailAPITestCaseMixin):
