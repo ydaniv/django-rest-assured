@@ -1,6 +1,6 @@
 language: python
-python: 3.5
 
+dist: precise  # fix installing Python 3.3, 3.2
 sudo: false
 
 env:
