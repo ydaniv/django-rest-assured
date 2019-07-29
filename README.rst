@@ -112,11 +112,10 @@ a user factory class. Assuming you use `factory_boy <http://factoryboy.readthedo
 Supports
 --------
 
-Tests run against:
+Support is determined by which Django versions are supported, and the Python and Django REST Framework versions that go with them.  Tests run against all Django versions supported as of July 28, 2019.
 
-* Django 1.6 - 1.11.
-* Django REST Framework 2.4.3 - 3.6.
-* Python 2.7, 3.3 - 3.6 (3.2 should work but is not tested).
+* Django 1.11 with Django REST Framework 3.4 - 3.6 and Python 2.7 and 3.4.
+* Django 2.1 and 2.2 with Django REST Framework 3.7-3.10 and Python 3.5-3.7.
 
 
 Installation

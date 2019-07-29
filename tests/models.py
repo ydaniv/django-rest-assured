@@ -14,7 +14,7 @@ class Stuff(models.Model):
 
 
 class RelatedStuff(models.Model):
-    thing = models.ForeignKey(Stuff)
+    thing = models.ForeignKey(Stuff, models.CASCADE)
 
     class Meta:
         app_label = 'tests'
