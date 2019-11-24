@@ -1,7 +1,7 @@
 django-rest-assured
 ===================
 
-.. image:: https://secure.travis-ci.org/ydaniv/django-rest-assured.rst
+.. image:: https://secure.travis-ci.org/ydaniv/django-rest-assured.png
         :target: http://travis-ci.org/ydaniv/django-rest-assured/
         :alt: Build
 
