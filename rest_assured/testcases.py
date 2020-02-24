@@ -1,10 +1,10 @@
 from django.db.models import Manager
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils import six
+import six
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-from django.utils.six import text_type
+from six import text_type
 
 
 class BaseRESTAPITestCase(APITestCase):
