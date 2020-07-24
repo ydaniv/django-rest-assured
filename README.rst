@@ -71,8 +71,8 @@ Then just set the required attributes, and continue extending it from there.
 
             base_name = 'category'
             factory_class = Category
-            create_data = {'name', 'documentary'}
-            update_data = {'name', 'horror'}
+            create_data = {'name': 'documentary'}
+            update_data = {'name': 'horror'}
 
 If your API requires authentication and/or authorization just add
 a user factory class. Assuming you use `factory_boy <http://factoryboy.readthedocs.org/en/latest/>`_:
@@ -104,8 +104,8 @@ a user factory class. Assuming you use `factory_boy <http://factoryboy.readthedo
             factory_class = Category
             # see here:
             user_factory = User
-            create_data = {'name', 'documentary'}
-            update_data = {'name', 'horror'}
+            create_data = {'name': 'documentary'}
+            update_data = {'name': 'horror'}
 
 
 
