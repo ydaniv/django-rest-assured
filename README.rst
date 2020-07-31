@@ -115,8 +115,8 @@ Supports
 Support is determined by which Django versions are supported, and the Python and Django REST Framework versions that go with them.  Tests run against all Django versions supported as of July 28, 2020.
 
 * Django 1.11 with Django REST Framework 3.4 - 3.6 and Python 2.7 and 3.4.
-* Django 2.1 and 2.2 with Django REST Framework 3.7-3.10 and Python 3.5-3.7.
-* Django 3.0 with Django REST Framework 3.10 and Python 3.7.
+* Django 2.1 and 2.2 with Django REST Framework 3.7-3.10 and Python 3.5-3.8.
+* Django 3.0 with Django REST Framework 3.10 and Python 3.7-3.8.
 
 
 Installation
