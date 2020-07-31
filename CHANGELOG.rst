@@ -1,3 +1,10 @@
+0.2.2 (2020-07-31)
+------------------
+
+*Support:*
+
+ - Updated support and now also tested against Django 3.0, and Python 3.8.
+
 0.2.1 (2017-21-21)
 ------------------
 
